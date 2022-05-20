@@ -150,7 +150,7 @@ def train_epoch(state, rng, model, trainloader, classification=False):
             classification=classification,
         )
         batch_losses.append(loss)
-       print(f"Completed processing batch {batch_idx} with loss {loss} at time {time.time()-t0:.2f}")
+        print(f"Completed processing batch {batch_idx} with loss {loss} at time {time.time()-t0:.2f}")
     print("ENDING PROFILE!!!")
     jax.profiler.stop_trace()
     print("ENDED PROFILE!!!")
