@@ -131,6 +131,8 @@ def train_epoch(state, rng, model, trainloader, classification=False):
     # Store Metrics
     model = model(training=True)
     batch_losses = []
+    print("STARTING PROFILE!!!")
+    jax.profiler.start_trace("/tmp/tensorboard")
     for batch_idx, (inputs, labels) in enumerate(tqdm(trainloader)):
         inputs = np.array(inputs.numpy())
         labels = np.array(labels.numpy())  # Not the most efficient...
@@ -144,6 +146,7 @@ def train_epoch(state, rng, model, trainloader, classification=False):
             classification=classification,
         )
         batch_losses.append(loss)
+    jax.profiler.stop_trace()
 
     # Return average loss over batches
     return state, np.mean(np.array(batch_losses))
