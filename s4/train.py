@@ -11,6 +11,8 @@ from .data import Datasets
 from .dss import DSSLayerInit
 from .s4 import BatchStackedModel, S4LayerInit, SSMInit
 
+import time
+
 
 try:
     import wandb
@@ -133,7 +135,9 @@ def train_epoch(state, rng, model, trainloader, classification=False):
     batch_losses = []
     print("STARTING PROFILE!!!")
     jax.profiler.start_trace("/tmp/tensorboard")
+    t0 = time.time()
     for batch_idx, (inputs, labels) in enumerate(tqdm(trainloader)):
+        print(f"Started processing batch {batch_idx} at time {time.time()-t0:.2f}")
         inputs = np.array(inputs.numpy())
         labels = np.array(labels.numpy())  # Not the most efficient...
         rng, drop_rng = jax.random.split(rng)
@@ -146,7 +150,10 @@ def train_epoch(state, rng, model, trainloader, classification=False):
             classification=classification,
         )
         batch_losses.append(loss)
+       print(f"Completed processing batch {batch_idx} with loss {loss} at time {time.time()-t0:.2f}")
+    print("ENDING PROFILE!!!")
     jax.profiler.stop_trace()
+    print("ENDED PROFILE!!!")
 
     # Return average loss over batches
     return state, np.mean(np.array(batch_losses))
@@ -359,6 +366,7 @@ def example_train(
 
         # Save a checkpoint each epoch & handle best (test loss... not "copacetic" but ehh)
         suf = f"-{suffix}" if suffix is not None else ""
+        '''
         run_id = f"checkpoints/{dataset}/{model}-d_model={d_model}-lr={lr}-bsz={bsz}{suf}"
 
         ckpt_path = checkpoints.save_checkpoint(
@@ -376,6 +384,7 @@ def example_train(
                 os.remove(f"{run_id}/best_{best_epoch}")
 
             best_loss, best_acc, best_epoch = test_loss, test_acc, epoch
+        '''
 
         # Print best accuracy & loss so far...
         print(
