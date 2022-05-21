@@ -151,7 +151,7 @@ def train_epoch(state, rng, model, trainloader, classification=False):
             model,
             classification=classification,
         )
-        batch_losses.append(loss)
+        batch_losses.append(loss.block_until_ready())
         if batch_idx > 50:
             print("ENDING PROFILE")
             jax.profiler.stop_trace()
@@ -201,7 +201,6 @@ class FeedForwardModel(nn.Module):
 # calls will become increasingly important as we optimize S4.
 
 
-@partial(jax.jit, static_argnums=(4, 5))
 def train_step(
     state, rng, batch_inputs, batch_labels, model, classification=False
 ):
