@@ -294,7 +294,7 @@ def example_train(
     print("[*] Setting Randomness...")
     key = jax.random.PRNGKey(0)
     key, rng, train_rng = jax.random.split(key, num=3)
-    print("Completed JAX random split")
+    print("Completed JAX random split, weights and biases", use_wandb)
 
     if use_wandb:
         wandb.init(project=wandb_project, entity=wandb_entity)
@@ -308,6 +308,8 @@ def example_train(
 
     # Check if classification dataset
     classification = "classification" in dataset
+
+    print("Calling create_dataset")
 
     # Create dataset...
     trainloader, testloader, n_classes, seq_len, in_dim = create_dataset_fn(
