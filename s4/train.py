@@ -133,11 +133,9 @@ def train_epoch(state, rng, model, trainloader, classification=False):
     # Store Metrics
     model = model(training=True)
     batch_losses = []
-    t0 = time.time()
+    print("STARTING PROFILE SERVER AT PORT 6000")
+    tf.profiler.experimental.server.start(6000)
     for batch_idx, (inputs, labels) in enumerate(trainloader):
-        if batch_idx > 50:
-            print("STARTING PROFILE")
-            jax.profiler.start_trace("/tmp/tensorboard")
         print(f"Started processing batch {batch_idx} at time {time.time()-t0:.2f}")
         inputs = np.array(inputs.numpy())
         labels = np.array(labels.numpy())  # Not the most efficient...
@@ -151,12 +149,7 @@ def train_epoch(state, rng, model, trainloader, classification=False):
             model,
             classification=classification,
         )
-        batch_losses.append(loss.block_until_ready())
-        if batch_idx > 50:
-            print("ENDING PROFILE")
-            jax.profiler.stop_trace()
-        print(f"Completed processing batch {batch_idx} with loss {loss} at time {time.time()-t0:.2f}")
-    print("ENDED PROFILE!!!")
+        batch_losses.append(loss)
 
     # Return average loss over batches
     return state, np.mean(np.array(batch_losses))
