@@ -300,9 +300,13 @@ def example_train(
         wandb.init(project=wandb_project, entity=wandb_entity)
 
     # Get model class and dataset creation function
+    print("datasets[dataset]")
     create_dataset_fn = Datasets[dataset]
+    print("creating model class", model)
     if model in ["ssm-naive", "s4", "dss"]:
-        model_cls = Models[model](N=ssm_n)
+        model_cls = Models[model]
+        print("calling model class", ssm_n)
+        model_cls = model_cls(N=ssm_n)
     else:
         model_cls = Models[model]
 
