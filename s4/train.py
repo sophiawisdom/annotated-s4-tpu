@@ -13,6 +13,8 @@ from .s4 import BatchStackedModel, S4LayerInit, SSMInit
 
 import time
 
+import tensorflow as tf
+
 
 try:
     import wandb
