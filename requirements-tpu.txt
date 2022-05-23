@@ -1,10 +1,10 @@
-flax==0.3.6
-torch==1.10.1
-torchtext==0.11.1
-torchaudio==0.10.1
-torchvision==0.11.2
-jupytext==1.13.4
-matplotlib==3.5.1
+flax
+torch
+torchtext
+torchaudio
+torchvision
+jupytext
+matplotlib
 black
 flake8
 google-cloud-storage
