@@ -138,8 +138,6 @@ def train_epoch(state, rng, model, trainloader, classification=False):
     print("STARTING PROFILE SERVER AT PORT 6000")
     tf.profiler.experimental.server.start(6000)
     t0 = time.time()
-    print(jax.devices)
-    breakpoint()
     for batch_idx, (inputs, labels) in enumerate(tqdm(trainloader)):
         inputs = np.array(inputs.numpy())
         labels = np.array(labels.numpy())  # Not the most efficient...
