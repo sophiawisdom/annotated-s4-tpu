@@ -134,7 +134,7 @@ def train_epoch(state, rng, model, trainloader, classification=False):
     model = model(training=True)
     batch_losses = []
     print("STARTING PROFILE SERVER AT PORT 6000")
-    tf.profiler.experimental.server.start(6000)
+    jax.profiler.experimental.server.start(6000)
     for batch_idx, (inputs, labels) in enumerate(trainloader):
         print(f"Started processing batch {batch_idx} at time {time.time()-t0:.2f}")
         inputs = np.array(inputs.numpy())
