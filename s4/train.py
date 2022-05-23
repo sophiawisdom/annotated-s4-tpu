@@ -137,12 +137,11 @@ def train_epoch(state, rng, model, trainloader, classification=False):
     batch_losses = []
     print("STARTING PROFILE SERVER AT PORT 6000")
     tf.profiler.experimental.server.start(6000)
-    for batch_idx, (inputs, labels) in enumerate(trainloader):
-        print(f"Started processing batch {batch_idx} at time {time.time()-t0:.2f}")
+    t0 = time.time()
+    for batch_idx, (inputs, labels) in enumerate(tqdm(trainloader)):
         inputs = np.array(inputs.numpy())
         labels = np.array(labels.numpy())  # Not the most efficient...
         rng, drop_rng = jax.random.split(rng)
-        print(f"train step at time {time.time()-t0:.2f}")
         state, loss = train_step(
             state,
             drop_rng,
