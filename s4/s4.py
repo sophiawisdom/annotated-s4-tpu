@@ -1242,7 +1242,7 @@ def S4LayerInit(N):
     q = Vc @ q.conj()
     A = np.diag(Lambda) - p[:, np.newaxis] @ q[:, np.newaxis].conj().T
     print("Returning S4Layer")
-    return partial(S4Layer, N=N, A=A, Lambda=Lambda, p=p, q=q, Vc=Vc)
+    return partial(S4Layer, N=N, A=A, Lambda=Lambda, p=p, q=q, Vc=Vc, decode=True)
 
 
 # ### Sampling and Caching
