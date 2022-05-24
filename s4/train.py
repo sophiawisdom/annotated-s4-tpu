@@ -191,7 +191,7 @@ class FeedForwardModel(nn.Module):
 # each wrapped in a call to `@jax.jit` which fuses operations, generally leading to high performance gains. These @jit
 # calls will become increasingly important as we optimize S4.
 
-
+@partial(jax.jit, static_argnums=(4, 5))
 def train_step(
     state, rng, batch_inputs, batch_labels, model, classification=False
 ):
