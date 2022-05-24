@@ -464,7 +464,7 @@ if __name__ == "__main__":
         jax.config.update('jax_platform_name', 'cpu')
     else:
         print("jax platform name tpu")
-        jax.config.update("jax_platform_name", "tpu")
+        # jax.config.update("jax_platform_name", "tpu")
     print(jax.devices())
 
     example_train(
