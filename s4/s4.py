@@ -99,6 +99,8 @@ from jax.nn.initializers import lecun_normal, uniform
 from jax.numpy.linalg import eig, inv, matrix_power
 from jax.scipy.signal import convolve
 
+from functools import partial
+
 
 rng = jax.random.PRNGKey(1)
 
@@ -375,16 +377,20 @@ def K_conv(Ab, Bb, Cb, L):
 # by using convolution theorem with [Fast Fourier Transform (FFT)](https://en.wikipedia.org/wiki/Convolution_theorem). The discrete convolution theorem - for circular convolution of two sequences - allows us to efficiently calculate the output of convolution by first multiplying FFTs of the input sequences and then applying an inverse FFT. To utilize this theorem for non-circular convolutions as in our case, we need to pad the input sequences with zeros, and then unpad the output sequence.
 # As the length gets longer this FFT method will be more efficient than the direct convolution,
 
-@jax.profiler.annotate_function
+@partial(jax.profiler.annotate_function, name="circular_convolution_func")
 def non_circular_convolution(u, K, nofft=False):
     if nofft:
         return convolve(u, K, mode="full")[: u.shape[0]]
     else:
         assert K.shape[0] == u.shape[0]
-        ud = np.fft.rfft(np.pad(u, (0, K.shape[0])))
-        Kd = np.fft.rfft(np.pad(K, (0, u.shape[0])))
-        out = ud * Kd
-        return np.fft.irfft(out)[: u.shape[0]]
+        with jax.profiler.TraceAnnotation("circular_convolution_1"):
+            ud = np.fft.rfft(np.pad(u, (0, K.shape[0])))
+        with jax.profiler.TraceAnnotation("circular_convolution_2"):
+            Kd = np.fft.rfft(np.pad(K, (0, u.shape[0])))
+        with jax.profiler.TraceAnnotation("circular_convolution_3"):
+            out = ud * Kd
+        with jax.profiler.TraceAnnotation("circular_convolution_4"):
+            return np.fft.irfft(out)[: u.shape[0]]
 
 
 # The CNN method and the RNN method yield (roughly) the same result,
@@ -565,7 +571,7 @@ class SSMLayer(nn.Module):
     decode: bool = False
 
     def setup(self):
-        print("Setting up SSM layer. N:", self.N, "l_max:", self.l_max, "decode", self.decode)
+        print("Setting up SSM layer. N:", self.N, "l_max:", self.l_max, "decode", self.decode, "K", self.K)
         # SSM parameters
         self.B = self.param("B", lecun_normal(), (self.N, 1))
         self.C = self.param("C", lecun_normal(), (1, self.N))
