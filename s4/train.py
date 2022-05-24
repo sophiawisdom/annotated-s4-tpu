@@ -195,7 +195,7 @@ class FeedForwardModel(nn.Module):
 # each wrapped in a call to `@jax.jit` which fuses operations, generally leading to high performance gains. These @jit
 # calls will become increasingly important as we optimize S4.
 
-# @partial(jax.jit, static_argnums=(4, 5))
+@partial(jax.jit, static_argnums=(4, 5))
 def train_step(
     state, rng, batch_inputs, batch_labels, model, classification=False
 ):
@@ -458,14 +458,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    print(jax.devices())
     if args.cpu_only:
         print("SETTING JAX TO BE CPU ONLY")
         jax.config.update('jax_platform_name', 'cpu')
     else:
         print("jax platform name tpu")
         # jax.config.update("jax_platform_name", "tpu")
-    print(jax.devices())
 
     example_train(
         args.model,
