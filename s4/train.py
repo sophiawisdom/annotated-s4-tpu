@@ -137,6 +137,7 @@ def train_epoch(state, rng, model, trainloader, classification=False):
     print("STARTING PROFILE SERVER AT PORT 9999")
     server = jax.profiler.start_server(9999)
     t0 = time.time()
+    device = None
     for batch_idx, (inputs, labels) in enumerate(tqdm(trainloader)):
         inputs = np.array(inputs.numpy())
         labels = np.array(labels.numpy())  # Not the most efficient...
@@ -150,7 +151,9 @@ def train_epoch(state, rng, model, trainloader, classification=False):
             classification=classification,
         )
         batch_losses.append(loss)
-        print("loss device is", loss.device_buffer.device())
+        if loss.device_buffer.device() != device:
+            print("loss device is", loss.device_buffer.device())
+            device = loss.device_buffer.device()
 
     # Return average loss over batches
     return state, np.mean(np.array(batch_losses))
@@ -194,7 +197,7 @@ class FeedForwardModel(nn.Module):
 # each wrapped in a call to `@jax.jit` which fuses operations, generally leading to high performance gains. These @jit
 # calls will become increasingly important as we optimize S4.
 
-@partial(jax.jit, static_argnums=(4, 5))
+# @partial(jax.jit, static_argnums=(4, 5))
 def train_step(
     state, rng, batch_inputs, batch_labels, model, classification=False
 ):
