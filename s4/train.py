@@ -148,6 +148,7 @@ def train_epoch(state, rng, model, trainloader, classification=False):
             classification=classification,
         )
         batch_losses.append(loss)
+        print("loss device is", loss.device_buffer.device())
 
     # Return average loss over batches
     return state, np.mean(np.array(batch_losses))
