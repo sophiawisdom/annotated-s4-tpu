@@ -1163,6 +1163,7 @@ class S4Layer(nn.Module):
     decode: bool = False
 
     def setup(self):
+        print("Setting up S4 layer. N:", N, "l_max:", l_max, "decode", decode)
         # Learned Parameters (Ct is complex!)
         self.Ct = self.param("Ct", lecun_normal(), (1, self.N, 2))
         self.Ct = self.Ct[..., 0] + 1j * self.Ct[..., 1]
@@ -1208,6 +1209,7 @@ class S4Layer(nn.Module):
                 "cache", "cache_x_k", np.zeros, (self.N,), np.complex64
             )
 
+    @jax.profiler.annotate_function
     def __call__(self, u):
         # This is identical to SSM Layer
         if not self.decode:
@@ -1227,11 +1229,13 @@ S4Layer = cloneLayer(S4Layer)
 
 
 def S4LayerInit(N):
+    print("S4LayerInit called with N", N)
     _, Lambda, p, q, V = make_NPLR_HiPPO(N)
     Vc = V.conj().T
     p = Vc @ p
     q = Vc @ q.conj()
     A = np.diag(Lambda) - p[:, np.newaxis] @ q[:, np.newaxis].conj().T
+    print("Returning S4Layer")
     return partial(S4Layer, N=N, A=A, Lambda=Lambda, p=p, q=q, Vc=Vc)
 
 
