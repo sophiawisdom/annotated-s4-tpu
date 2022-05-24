@@ -462,6 +462,9 @@ if __name__ == "__main__":
     if args.cpu_only:
         print("SETTING JAX TO BE CPU ONLY")
         jax.config.update('jax_platform_name', 'cpu')
+    else:
+        print("jax platform name tpu")
+        jax.config.update("jax_platform_name", "tpu")
     print(jax.devices())
 
     example_train(
