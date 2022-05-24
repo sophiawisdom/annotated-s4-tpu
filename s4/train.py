@@ -13,9 +13,6 @@ from .s4 import BatchStackedModel, S4LayerInit, SSMInit
 
 import time
 
-import tensorflow as tf
-
-
 try:
     import wandb
 
@@ -136,7 +133,7 @@ def train_epoch(state, rng, model, trainloader, classification=False):
     model = model(training=True)
     batch_losses = []
     print("STARTING PROFILE SERVER AT PORT 6000")
-    tf.profiler.experimental.server.start(6000)
+    jax.profiler.server.start(6000)
     t0 = time.time()
     for batch_idx, (inputs, labels) in enumerate(tqdm(trainloader)):
         inputs = np.array(inputs.numpy())
