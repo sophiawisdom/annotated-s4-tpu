@@ -430,6 +430,7 @@ if __name__ == "__main__":
     # Optimization Parameters
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--lr_schedule", default=False, action="store_true")
+    parser.add_argument("--cpu_only", type=bool, default=False)
 
     # Weights and Biases Parameters
     parser.add_argument(
@@ -452,6 +453,10 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+
+    if args.cpu_only:
+        print("SETTING JAX TO BE CPU ONLY")
+        jax.config.update('jax_platform_name', 'cpu')
 
     example_train(
         args.model,
