@@ -565,6 +565,7 @@ class SSMLayer(nn.Module):
     decode: bool = False
 
     def setup(self):
+        print("Setting up SSM layer. N:", N, "l_max:", l_max, "decode", decode)
         # SSM parameters
         self.B = self.param("B", lecun_normal(), (self.N, 1))
         self.C = self.param("C", lecun_normal(), (1, self.N))
@@ -597,7 +598,7 @@ class SSMLayer(nn.Module):
 # https://flax.readthedocs.io/en/latest/_autosummary/flax.linen.vmap.html)
 # method to easily define these copies,
 
-
+@jax.profiler.annotate_function
 def cloneLayer(layer):
     return nn.vmap(
         layer,
