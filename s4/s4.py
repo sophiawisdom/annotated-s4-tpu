@@ -189,7 +189,7 @@ def discretize(A, B, C, step):
 # [scan](https://jax.readthedocs.io/en/latest/_autosummary/jax.lax.scan.html)
 # in JAX,
 
-
+@jax.profiler.annotate_function
 def scan_SSM(Ab, Bb, Cb, u, x0):
     def step(x_k_1, u_k):
         x_k = Ab @ x_k_1 + Bb @ u_k
@@ -375,7 +375,7 @@ def K_conv(Ab, Bb, Cb, L):
 # by using convolution theorem with [Fast Fourier Transform (FFT)](https://en.wikipedia.org/wiki/Convolution_theorem). The discrete convolution theorem - for circular convolution of two sequences - allows us to efficiently calculate the output of convolution by first multiplying FFTs of the input sequences and then applying an inverse FFT. To utilize this theorem for non-circular convolutions as in our case, we need to pad the input sequences with zeros, and then unpad the output sequence.
 # As the length gets longer this FFT method will be more efficient than the direct convolution,
 
-
+@jax.profiler.annotate_function
 def non_circular_convolution(u, K, nofft=False):
     if nofft:
         return convolve(u, K, mode="full")[: u.shape[0]]
