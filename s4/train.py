@@ -2,8 +2,6 @@ import os
 import shutil
 from functools import partial
 import jax
-print("CPU ONLY")
-jax.config.update('jax_platform_name', 'cpu')
 import jax.numpy as np
 import optax
 from flax import linen as nn
