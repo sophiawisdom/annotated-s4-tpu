@@ -565,7 +565,7 @@ class SSMLayer(nn.Module):
     decode: bool = False
 
     def setup(self):
-        print("Setting up SSM layer. N:", N, "l_max:", l_max, "decode", decode)
+        print("Setting up SSM layer. N:", self.N, "l_max:", self.l_max, "decode", self.decode)
         # SSM parameters
         self.B = self.param("B", lecun_normal(), (self.N, 1))
         self.C = self.param("C", lecun_normal(), (1, self.N))
@@ -1163,7 +1163,7 @@ class S4Layer(nn.Module):
     decode: bool = False
 
     def setup(self):
-        print("Setting up S4 layer. N:", N, "l_max:", l_max, "decode", decode)
+        print("Setting up S4 layer. N:", self.N, "l_max:", self.l_max, "decode", self.decode)
         # Learned Parameters (Ct is complex!)
         self.Ct = self.param("Ct", lecun_normal(), (1, self.N, 2))
         self.Ct = self.Ct[..., 0] + 1j * self.Ct[..., 1]
