@@ -1177,7 +1177,7 @@ class S4Layer(nn.Module):
         self.D = self.param("D", uniform(), (1,))
         self.step = np.exp(self.param("log_step", log_step_initializer(), (1,)))
 
-        if not self.decode:
+        if False:
             # CNN mode, compute kernel.
             K_gen = K_gen_DPLR(
                 self.Lambda,
@@ -1218,7 +1218,7 @@ class S4Layer(nn.Module):
     @jax.profiler.annotate_function
     def __call__(self, u):
         # This is identical to SSM Layer
-        if not self.decode:
+        if False:
             # CNN Mode
             return non_circular_convolution(u, self.K) + self.D * u
         else:
@@ -1242,7 +1242,7 @@ def S4LayerInit(N):
     q = Vc @ q.conj()
     A = np.diag(Lambda) - p[:, np.newaxis] @ q[:, np.newaxis].conj().T
     print("Returning S4Layer")
-    return partial(S4Layer, N=N, A=A, Lambda=Lambda, p=p, q=q, Vc=Vc, decode=True)
+    return partial(S4Layer, N=N, A=A, Lambda=Lambda, p=p, q=q, Vc=Vc)
 
 
 # ### Sampling and Caching
