@@ -1207,6 +1207,7 @@ class S4Layer(nn.Module):
             
             print("Initializing with variables", self.variables.keys())
             ssm_var = self.variable("prime", "ssm", init_discrete)
+            print("ssm_var is", ssm_var)
             if self.is_mutable_collection("prime"):
                 ssm_var.value = init_discrete()
             self.ssm = ssm_var.value
