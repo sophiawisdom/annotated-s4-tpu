@@ -1169,7 +1169,7 @@ class S4Layer(nn.Module):
     decode: bool = False
 
     def setup(self):
-        # self.decode = True
+        self.decode = True
         print("Setting up S4 layer. N:", self.N, "l_max:", self.l_max, "decode", self.decode)
         # Learned Parameters (Ct is complex!)
         self.Ct = self.param("Ct", lecun_normal(), (1, self.N, 2))
