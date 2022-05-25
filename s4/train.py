@@ -200,6 +200,7 @@ def train_step(
     state, rng, batch_inputs, batch_labels, model, classification=False
 ):
     def loss_fn(params):
+        print(params)
         if classification:
             logits, mod_vars = model.apply(
                 {"params": params},
