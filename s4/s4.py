@@ -610,8 +610,8 @@ def cloneLayer(layer):
         layer,
         in_axes=1,
         out_axes=1,
-        variable_axes={"params": None, "cache": 1, "prime": 1},
-        split_rngs={"params": False},
+        variable_axes={"params": 1, "cache": 1, "prime": 1},
+        split_rngs={"params": True},
     )
 
 
