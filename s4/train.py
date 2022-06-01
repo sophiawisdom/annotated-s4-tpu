@@ -132,8 +132,6 @@ def train_epoch(state, rng, model, trainloader, classification=False):
     # Store Metrics
     model = model(training=True)
     batch_losses = []
-    print("STARTING PROFILE SERVER AT PORT 9999")
-    server = jax.profiler.start_server(9999)
     t0 = time.time()
     device = None
     for batch_idx, (inputs, labels) in enumerate(tqdm(trainloader)):
@@ -348,6 +346,8 @@ def example_train(
 
     # Loop over epochs
     best_loss, best_acc, best_epoch = 10000, 0, 0
+    print("STARTING PROFILE SERVER AT PORT 9999")
+    server = jax.profiler.start_server(9999)
     for epoch in range(epochs):
         print(f"[*] Starting Training Epoch {epoch + 1}...")
         state, train_loss = train_epoch(
