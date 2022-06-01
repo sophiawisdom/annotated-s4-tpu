@@ -1166,7 +1166,7 @@ class S4Layer(nn.Module):
     Lambda: np.DeviceArray
     N: int
     l_max: int
-    decode: bool = True
+    decode: bool = False
 
     def setup(self):
         print("Setting up S4 layer. N:", self.N, "l_max:", self.l_max, "decode", self.decode)
@@ -1177,7 +1177,7 @@ class S4Layer(nn.Module):
         self.D = self.param("D", uniform(), (1,))
         self.step = np.exp(self.param("log_step", log_step_initializer(), (1,)))
 
-        if False:
+        if self.decode:
             # CNN mode, compute kernel.
             K_gen = K_gen_DPLR(
                 self.Lambda,
